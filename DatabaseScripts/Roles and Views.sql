@@ -16,8 +16,10 @@ CREATE USER vasilyeva_am WITH PASSWORD 'secure_password_123';
 CREATE USER grigoryev_dv WITH PASSWORD 'secure_password_123';
 CREATE USER afanasiev_vv WITH PASSWORD 'secure_password_123';
 CREATE USER user_public WITH PASSWORD 'secure_password_123';
+CREATE USER db_admin_user WITH PASSWORD 'secure_password_123';
 
 -- ================================ НАЗНАЧЕНИЕ РОЛЕЙ ПОЛЬЗОВАТЕЛЯМ =========
+GRANT db_admin TO db_admin_user;
 GRANT company_director TO ivanov_ii;
 GRANT department_manager TO petrova_es;
 GRANT employee TO sidorov_ad;
