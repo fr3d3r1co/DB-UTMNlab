@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать запись в {{ table_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Редактировать запись в таблице: {{ table_name }}</h5>
+                <a href="{{ url_for('manage_table', table_name=table_name) }}" class="btn btn-outline-dark btn-sm">
+                    ← Назад к таблице
+                </a>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% for column in columns %}
+                        {% if column.column_name not in ['created_at', 'updated_at'] %}
+                        <div class="mb-3">
+                            <label class="form-label">
+                                {{ column.column_name }}
+                                {% if column.is_nullable == 'NO' and not column.column_default %}
+                                <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            
+                            {% set current_value = current_record[column.column_name] %}
+                            
+                            {% if column.data_type == 'boolean' %}
+                            <select class="form-select" name="{{ column.column_name }}">
+                                <option value="true" {% if current_value == True %}selected{% endif %}>True</option>
+                                <option value="false" {% if current_value == False %}selected{% endif %}>False</option>
+                            </select>
+                            
+                            {% elif column.data_type in ['text', 'character varying'] %}
+                            <textarea class="form-control" name="{{ column.column_name }}" 
+                                    {% if column.character_maximum_length %}maxlength="{{ column.character_maximum_length }}"{% endif %}
+                                    {% if column.is_nullable == 'NO' and not column.column_default %}required{% endif %}>{{ current_value or '' }}</textarea>
+                            
+                            {% else %}
+                            <input type="{% if column.data_type in ['integer', 'numeric'] %}number{% else %}text{% endif %}" 
+                                   class="form-control" 
+                                   name="{{ column.column_name }}"
+                                   value="{{ current_value or '' }}"
+                                   {% if column.character_maximum_length %}maxlength="{{ column.character_maximum_length }}"{% endif %}
+                                   {% if column.is_nullable == 'NO' and not column.column_default %}required{% endif %}>
+                            {% endif %}
+                            
+                            <small class="form-text text-muted">
+                                Тип: {{ column.data_type }}
+                                {% if column.is_nullable == 'NO' %} | Обязательное поле{% endif %}
+                            </small>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        <a href="{{ url_for('manage_table', table_name=table_name) }}" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

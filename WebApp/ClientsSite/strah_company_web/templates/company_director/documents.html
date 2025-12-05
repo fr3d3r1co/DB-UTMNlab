@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Все документы{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Все документы компании</h5>
+                <div>
+                    <a href="{{ url_for('add_document') }}" class="btn btn-success btn-sm">
+                        + Добавить документ
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endif %}
+                
+                {% if success %}
+                <div class="alert alert-success">
+                    {{ success }}
+                </div>
+                {% endif %}
+
+                {% if documents %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Описание</th>
+                                <th>Уровень доступа</th>
+                                <th>Отдел</th>
+                                <th>Создал</th>
+                                <th>Дата</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doc in documents %}
+                            <tr>
+                                <td>{{ doc.file_name }}</td>
+                                <td>{{ doc.description or '—' }}</td>
+                                <td>
+                                    <span class="badge 
+                                        {% if doc.confidentiality_level == 0 %}bg-success
+                                        {% elif doc.confidentiality_level == 1 %}bg-warning
+                                        {% else %}bg-danger{% endif %}">
+                                        {% if doc.confidentiality_level == 0 %}Публичный
+                                        {% elif doc.confidentiality_level == 1 %}ДСП
+                                        {% else %}Только начальники{% endif %}
+                                    </span>
+                                </td>
+                                <td>{{ doc.department_name }}</td>
+                                <td>{{ doc.created_by_name }}</td>
+                                <td>{{ doc.created_at.strftime('%d.%m.%Y') }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('view_document', document_id=doc.document_id) }}" 
+                                           class="btn btn-outline-primary">Просмотр</a>
+                                        <a href="{{ url_for('download_document', document_id=doc.document_id) }}" 
+                                           class="btn btn-outline-success">Скачать</a>
+                                        <a href="{{ url_for('edit_document', document_id=doc.document_id) }}" 
+                                           class="btn btn-outline-warning">Изменить</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted">Нет документов в системе</p>
+                    <a href="{{ url_for('add_document') }}" class="btn btn-success">
+                        Добавить первый документ
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

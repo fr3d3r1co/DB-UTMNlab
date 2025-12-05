@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Документ: {{ document.file_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Информация о документе</h5>
+                <a href="{{ url_for('documents_list') }}" class="btn btn-outline-dark btn-sm">
+                    ← Назад к документам
+                </a>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endif %}
+                
+                {% if success %}
+                <div class="alert alert-success">
+                    {{ success }}
+                </div>
+                {% endif %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <th width="40%">Название файла:</th>
+                                <td>{{ document.file_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Описание:</th>
+                                <td>{{ document.description or '—' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Уровень доступа:</th>
+                                <td>
+                                    <span class="badge 
+                                        {% if document.confidentiality_level == 0 %}bg-success
+                                        {% elif document.confidentiality_level == 1 %}bg-warning
+                                        {% else %}bg-danger{% endif %}">
+                                        {% if document.confidentiality_level == 0 %}Публичный
+                                        {% elif document.confidentiality_level == 1 %}ДСП
+                                        {% else %}Только начальники{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Размер файла:</th>
+                                <td>
+                                    {% if document.file_size %}
+                                        {{ "%.1f"|format(document.file_size / 1024 / 1024) }} МБ
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <th width="40%">Отдел:</th>
+                                <td>{{ document.department_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Создал:</th>
+                                <td>{{ document.created_by_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Дата создания:</th>
+                                <td>{{ document.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                            </tr>
+                            {% if document.policy_id %}
+                            <tr>
+                                <th>Привязан к полису:</th>
+                                <td>№ {{ document.policy_id }}</td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Основные действия -->
+                <div class="mt-4">
+                    <a href="{{ url_for('download_document', document_id=document.document_id) }}" 
+                       class="btn btn-primary">
+                        📥 Скачать документ
+                    </a>
+                    
+                    {% if user_role in ['department_manager', 'hr_manager', 'company_director', 'db_admin'] %}
+                    <a href="{{ url_for('edit_document', document_id=document.document_id) }}" 
+                       class="btn btn-outline-primary">
+                        ✏️ Редактировать информацию
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Форма замены файла - ТОЛЬКО ДЛЯ ТЕХ, КТО МОЖЕТ РЕДАКТИРОВАТЬ -->
+                {% if user_role in ['department_manager', 'hr_manager', 'company_director', 'db_admin'] %}
+                <hr>
+                <div class="mt-4">
+                    <h6>🔄 Замена файла документа</h6>
+                    <p class="text-muted small mb-3">
+                        Вы можете заменить текущий файл новым. Старый файл будет удален.
+                    </p>
+                    
+                    <form method="POST" action="{{ url_for('replace_document_file', document_id=document.document_id) }}" 
+                          enctype="multipart/form-data" class="row g-3 align-items-end">
+                        <div class="col-md-5">
+                            <label class="form-label">Новый файл *</label>
+                            <input type="file" class="form-control" name="document_file" 
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.txt" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Новое название (опционально)</label>
+                            <input type="text" class="form-control" name="file_name" 
+                                   placeholder="{{ document.file_name }}" value="{{ document.file_name }}">
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-warning w-100">Заменить файл</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+                
+                <!-- Удаление документа - ТОЛЬКО ДЛЯ ТЕХ, КТО МОЖЕТ УДАЛЯТЬ -->
+                {% if user_role in ['department_manager', 'company_director', 'db_admin'] or document.created_by_employee_id == session.user_id %}
+                <hr>
+                <div class="mt-4">
+                    <h6 class="text-danger">🗑️ Удаление документа</h6>
+                    <p class="text-muted small mb-3">
+                        Внимание: это действие необратимо. Документ и файл будут удалены без возможности восстановления.
+                    </p>
+                    
+                    <form method="POST" action="{{ url_for('delete_document', document_id=document.document_id) }}" 
+                          onsubmit="return confirm('Вы уверены, что хотите удалить документ «{{ document.file_name }}»?\\n\\nЭто действие необратимо!');">
+                        <button type="submit" class="btn btn-danger">
+                            🗑️ Удалить документ
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

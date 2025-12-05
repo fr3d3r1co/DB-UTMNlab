@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить сотрудника{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Добавить нового сотрудника</h5>
+                <a href="{{ url_for('manage_employees') }}" class="btn btn-outline-dark btn-sm">
+                    ← Назад к списку
+                </a>
+            </div>
+            <div class="card-body">
+                {% if errors %}
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        {% for error in errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">ФИО *</label>
+                                <input type="text" class="form-control" name="full_name" required maxlength="255">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" name="email" required maxlength="100">
+                                <small class="form-text text-muted">Будет использоваться для входа в систему</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Телефон *</label>
+                                <input type="tel" class="form-control" name="phone" required maxlength="11">
+                                <small class="form-text text-muted">Только цифры, например: 79101112233</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Отдел *</label>
+                                <select class="form-select" name="department_id" required>
+                                    <option value="">-- Выберите отдел --</option>
+                                    {% for department in departments %}
+                                    <option value="{{ department.department_id }}">{{ department.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Назначить начальником отдела</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="is_manager" id="is_manager" value="true">
+                                    <label class="form-check-label" for="is_manager">
+                                        Сделать начальником этого отдела
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Статус аккаунта</label>
+                                <select class="form-select" name="is_active">
+                                    <option value="true" selected>Активен</option>
+                                    <option value="false">Неактивен</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Добавить сотрудника</button>
+                        <a href="{{ url_for('manage_employees') }}" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

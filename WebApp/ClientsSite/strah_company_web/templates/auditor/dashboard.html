@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Дашборд аудитора{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h4 class="text-dark mb-3">Панель аудитора</h4>
+        <p class="text-muted">Мониторинг и аудит данных системы</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card bg-primary text-white">
+        <div class="stat-number">{{ stats.employees_count }}</div>
+        <div class="stat-label">Сотрудников</div>
+    </div>
+    <div class="stat-card bg-success text-white">
+        <div class="stat-number">{{ stats.policies_total }}</div>
+        <div class="stat-label">Полисов</div>
+    </div>
+    <div class="stat-card bg-warning text-white">
+        <div class="stat-number">{{ stats.documents_count }}</div>
+        <div class="stat-label">Документов</div>
+    </div>
+    <div class="stat-card bg-info text-white">
+        <div class="stat-number">{{ stats.clients_count }}</div>
+        <div class="stat-label">Клиентов</div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Быстрый доступ</h5>
+    </div>
+    <div class="card-body">
+        <div class="actions-grid">
+            <a href="{{ url_for('auditor_policies') }}" class="action-btn">
+                📄 Просмотр полисов
+            </a>
+            <a href="{{ url_for('auditor_documents') }}" class="action-btn">
+                📁 Просмотр документов
+            </a>
+            <a href="{{ url_for('auditor_clients') }}" class="action-btn">
+                👥 Просмотр клиентов
+            </a>
+            <a href="{{ url_for('audit') }}" class="action-btn">
+                📊 Системный аудит
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if session.user_role == 'auditor' and session.user_dept_id == 4 %}
+<div class="card mt-4">
+    <div class="card-body">
+        <div class="actions-grid">
+            <a href="{{ url_for('add_document') }}" class="action-btn">
+                Добавить документ
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

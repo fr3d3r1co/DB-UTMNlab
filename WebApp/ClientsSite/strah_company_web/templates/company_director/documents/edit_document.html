@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать документ{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Редактировать документ</h5>
+                <a href="{{ url_for('view_document', document_id=document.document_id) }}" class="btn btn-outline-dark btn-sm">
+                    ← Назад к документу
+                </a>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Название файла *</label>
+                                <input type="text" class="form-control" name="file_name" 
+                                       value="{{ document.file_name }}" required maxlength="500">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Описание</label>
+                                <textarea class="form-control" name="description" rows="3">{{ document.description or '' }}</textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Текущий файл</label>
+                                <div class="form-control bg-light">
+                                    <strong>{{ document.file_name }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        Путь: {{ document.stored_file_path }}<br>
+                                        Размер: {% if document.file_size %}
+                                            {{ "%.1f"|format(document.file_size / 1024 / 1024) }} МБ
+                                        {% else %}
+                                            неизвестно
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Заменить файл (опционально)</label>
+                                <input type="file" class="form-control" name="document_file" 
+                                       accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.txt">
+                                <small class="form-text text-muted">
+                                    Оставьте пустым, чтобы сохранить текущий файл
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Уровень конфиденциальности *</label>
+                                <select class="form-select" name="confidentiality_level" required>
+                                    <option value="0" {% if document.confidentiality_level == 0 %}selected{% endif %}>Публичный (видят все)</option>
+                                    <option value="1" {% if document.confidentiality_level == 1 %}selected{% endif %}>ДСП (видят сотрудники отдела)</option>
+                                    <option value="2" {% if document.confidentiality_level == 2 %}selected{% endif %}>Только начальники (видят только начальники отдела и руководство)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Привязать к полису</label>
+                                <select class="form-select" name="policy_id">
+                                    <option value="">-- Не привязан --</option>
+                                    {% for policy in policies %}
+                                    <option value="{{ policy.policy_id }}" 
+                                            {% if document.policy_id == policy.policy_id %}selected{% endif %}>
+                                        {{ policy.policy_number }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Создал сотрудник *</label>
+                                <select class="form-select" name="created_by_employee_id" required>
+                                    <option value="">-- Выберите сотрудника --</option>
+                                    {% for employee in employees %}
+                                    <option value="{{ employee.employee_id }}"
+                                            {% if document.created_by_employee_id == employee.employee_id %}selected{% endif %}>
+                                        {{ employee.full_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Отдел создания *</label>
+                                <select class="form-select" name="created_in_department_id" required>
+                                    <option value="">-- Выберите отдел --</option>
+                                    {% for department in departments %}
+                                    <option value="{{ department.department_id }}"
+                                            {% if document.created_in_department_id == department.department_id %}selected{% endif %}>
+                                        {{ department.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        <a href="{{ url_for('view_document', document_id=document.document_id) }}" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

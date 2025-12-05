@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Аудит системы{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h4 class="text-dark mb-3">Аудит данных системы</h4>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Обзор данных</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Таблица</th>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Доп. информация</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in audit_data %}
+                    <tr>
+                        <td>
+                            <span class="badge 
+                                {% if item.table_name == 'departments' %}bg-primary
+                                {% elif item.table_name == 'employees' %}bg-success
+                                {% elif item.table_name == 'clients' %}bg-info
+                                {% elif item.table_name == 'policies' %}bg-warning
+                                {% else %}bg-secondary{% endif %}">
+                                {{ item.table_name }}
+                            </span>
+                        </td>
+                        <td><strong>#{{ item.id }}</strong></td>
+                        <td>{{ item.name }}</td>
+                        <td>
+                            {% if item.manager_id %}
+                                <small class="text-muted">ID: {{ item.manager_id }}</small>
+                            {% else %}
+                                <small class="text-muted">—</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

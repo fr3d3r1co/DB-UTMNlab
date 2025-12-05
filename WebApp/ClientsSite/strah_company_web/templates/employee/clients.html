@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Клиенты{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">База клиентов</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>ФИО</th>
+                                <th>Телефон</th>
+                                <th>Email</th>
+                                <th>Паспорт</th>
+                                <th>Дата рождения</th>
+                                <th>Адрес</th>
+                                <th>Водительское удостоверение</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in clients %}
+                            <tr>
+                                <td><strong>{{ client.full_name }}</strong></td>
+                                <td>{{ client.phone }}</td>
+                                <td>{{ client.email }}</td>
+                                <td>{{ client.passport_series }} {{ client.passport_number }}</td>
+                                <td>{{ client.birth_date.strftime('%d.%m.%Y') if client.birth_date else '' }}</td>
+                                <td>{{ client.registration_address[:50] }}{% if client.registration_address|length > 50 %}...{% endif %}</td>
+                                <td>{{ client.driver_license_series }} {{ client.driver_license_number }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
