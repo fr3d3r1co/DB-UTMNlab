@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h4 class="text-dark mb-3">Дашборд руководителя {{ session.user_name }}</h4>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card bg-primary text-white">
+        <div class="stat-number">{{ stats.employees_count }}</div>
+        <div class="stat-label">Сотрудников</div>
+    </div>
+    <div class="stat-card bg-success text-white">
+        <div class="stat-number">{{ stats.clients_count }}</div>
+        <div class="stat-label">Клиентов</div>
+    </div>
+    <div class="stat-card bg-warning text-white">
+        <div class="stat-number">{{ stats.policies_count }}</div>
+        <div class="stat-label">Полисов</div>
+    </div>
+    <div class="stat-card bg-info text-white">
+        <div class="stat-number">{{ stats.documents_count }}</div>
+        <div class="stat-label">Документов</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Быстрый доступ</h5>
+    </div>
+    <div class="card-body">
+        <div class="actions-grid">
+            <a href="{{ url_for('policies') }}" class="action-btn">
+                📄 Все полисы
+            </a>
+            <a href="{{ url_for('documents_list') }}" class="action-btn">  <!-- ИЗМЕНИЛИ ЗДЕСЬ -->
+                📁 Все документы
+            </a>
+            <a href="{{ url_for('employees_list') }}" class="action-btn">
+                👥 Все сотрудники
+            </a>
+            <a href="{{ url_for('manage_employees') }}" class="action-btn">
+                👥 Управление сотрудниками
+            </a>
+            <a href="{{ url_for('audit') }}" class="action-btn">
+                📊 Аудит
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
