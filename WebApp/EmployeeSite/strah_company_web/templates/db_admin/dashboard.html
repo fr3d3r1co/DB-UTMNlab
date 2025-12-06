@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Панель администратора БД{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h4 class="text-dark mb-3">Управление базой данных</h4>
+        <p class="text-muted">Полный доступ ко всем таблицам и данным</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card bg-primary text-white">
+        <div class="stat-number">{{ stats.employees_count }}</div>
+        <div class="stat-label">Сотрудников</div>
+    </div>
+    <div class="stat-card bg-success text-white">
+        <div class="stat-number">{{ stats.clients_count }}</div>
+        <div class="stat-label">Клиентов</div>
+    </div>
+    <div class="stat-card bg-warning text-white">
+        <div class="stat-number">{{ stats.policies_count }}</div>
+        <div class="stat-label">Полисов</div>
+    </div>
+    <div class="stat-card bg-info text-white">
+        <div class="stat-number">{{ stats.documents_count }}</div>
+        <div class="stat-label">Документов</div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Управление таблицами</h5>
+    </div>
+    <div class="card-body">
+        <div class="actions-grid">
+            <a href="{{ url_for('manage_table', table_name='employees') }}" class="action-btn">
+                Сотрудники
+            </a>
+            <a href="{{ url_for('manage_table', table_name='clients') }}" class="action-btn">
+                Клиенты
+            </a>
+            <a href="{{ url_for('manage_table', table_name='policies') }}" class="action-btn">
+                Полисы
+            </a>
+            <a href="{{ url_for('manage_table', table_name='documents') }}" class="action-btn">
+                Документы
+            </a>
+            <a href="{{ url_for('manage_table', table_name='departments') }}" class="action-btn">
+               Отделы
+            </a>
+            <a href="{{ url_for('manage_table', table_name='car_brands') }}" class="action-btn">
+                Марки авто
+            </a>
+            <a href="{{ url_for('manage_table', table_name='car_models') }}" class="action-btn">
+                Модели авто
+            </a>
+            <a href="{{ url_for('manage_table', table_name='policy_statuses') }}" class="action-btn">
+                Статусы полисов
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

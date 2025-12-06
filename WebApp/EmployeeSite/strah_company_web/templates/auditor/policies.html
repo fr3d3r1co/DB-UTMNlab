@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Полисы - Аудит{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Все полисы (аудит)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Номер</th>
+                                <th>Клиент</th>
+                                <th>Стоимость</th>
+                                <th>Статус</th>
+                                <th>Автомобиль</th>
+                                <th>Дата начала</th>
+                                <th>Создал</th>
+                                <th>Отдел</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for policy in policies %}
+                            <tr>
+                                <td><strong>{{ policy.policy_number }}</strong></td>
+                                <td>{{ policy.client_name }}</td>
+                                <td>{{ "%.2f"|format(policy.cost) }} ₽</td>
+                                <td>
+                                    <span class="badge 
+                                        {% if policy.status_name == 'Активен' %}bg-success
+                                        {% elif policy.status_name == 'Оформлен' %}bg-primary
+                                        {% elif policy.status_name == 'Аннулирован' %}bg-danger
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ policy.status_name }}
+                                    </span>
+                                </td>
+                                <td>{{ policy.car_brand }} {{ policy.car_model }}</td>
+                                <td>{{ policy.start_date.strftime('%d.%m.%Y') }}</td>
+                                <td>{{ policy.created_by_employee }}</td>
+                                <td>{{ policy.department_name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

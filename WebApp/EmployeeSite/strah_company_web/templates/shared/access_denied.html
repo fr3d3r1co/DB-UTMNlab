@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Доступ запрещен{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <h4>Доступ запрещен</h4>
+                </div>
+                {% if error %}
+                <p class="text-danger mb-4">{{ error }}</p>
+                {% else %}
+                <p class="text-muted mb-4">У вас недостаточно прав для просмотра этого раздела</p>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                        ← Вернуться на главную
+                    </a>
+                    <a href="{{ url_for('documents_list') }}" class="btn btn-outline-secondary">
+                         К документам
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

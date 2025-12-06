@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h4>Управление персоналом</h4>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h5>{{ total_employees }}</h5>
+                <small>Всего сотрудников</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h5>{{ active_employees }}</h5>
+                <small>Активных</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <h5>{{ total_employees - active_employees }}</h5>
+                <small>Неактивных</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Быстрый доступ</h6>
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('employees_list') }}" class="btn btn-outline-dark w-100">
+                            Все сотрудники
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('department_employees') }}" class="btn btn-outline-dark w-100">
+                            Сотрудники отдела
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('documents_list') }}" class="btn btn-outline-dark w-100">  <!-- ИЗМЕНИЛИ ЗДЕСЬ -->
+                            Документы
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
